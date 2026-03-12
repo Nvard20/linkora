@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Linkora</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+body{background:#f4f6fb;padding:20px;}
+.container{max-width:1200px;margin:auto;display:flex;gap:40px;flex-wrap:wrap;}
+
+/* EDITOR */
+.editor{flex:1;min-width:320px;background:white;padding:25px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.08);}
+.editor h2{margin-bottom:20px;}
+.input-group{margin-bottom:15px;}
+.input-group input, .input-group textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;}
+.input-group label{display:block;margin-bottom:5px;font-weight:bold;}
+textarea{resize:none;}
+
+/* BUTTON */
+.btn{background:#6C63FF;color:white;padding:10px 18px;border:none;border-radius:20px;cursor:pointer;margin-top:5px;transition:.3s;}
+.btn:hover{background:#4A47A3;}
+
+/* PREVIEW */
+.preview{flex:1;min-width:320px;background:white;padding:25px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.08);text-align:center;}
+.preview img.profile{width:90px;height:90px;border-radius:50%;object-fit:cover;margin-bottom:10px;}
+.preview h3{margin-bottom:20px;}
+.links a, .gallery img{display:block;margin:8px 0;padding:10px;background:#6C63FF;color:white;border-radius:10px;text-decoration:none;}
+.gallery{margin-top:20px;}
+.gallery img{width:80px;height:80px;border-radius:10px;margin:5px;object-fit:cover;display:inline-block;}
+.about-section{margin-top:40px;padding:30px;background:#6C63FF;color:white;border-radius:15px;text-align:center;}
+.about-section h2{font-size:24px;margin-bottom:10px;}
+.about-section p{font-size:15px;line-height:1.6;max-width:500px;margin:auto;}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- EDITOR -->
+<div class="editor">
+<h2>Edit Your Bio Page</h2>
+
+<div class="input-group">
+<label>Upload Profile Image</label>
+<input type="file" id="imageUpload" accept="image/*">
+</div>
+
+<div class="input-group">
+<label>Page Title</label>
+<input type="text" id="titleInput" placeholder="Your Page Title">
+</div>
+
+<div class="input-group">
+<label>Add Link</label>
+<input type="text" id="linkInput" placeholder="https://">
+<button type="button" class="btn" onclick="addLink()">Add Link</button>
+</div>
+
+<div class="input-group">
+<label>Upload Gallery Images</label>
+<input type="file" id="galleryUpload" multiple accept="image/*">
+</div>
+
+<div class="input-group">
+<label>About Section</label>
+<textarea id="aboutInput" rows="4" placeholder="Write something about yourself..."></textarea>
+</div>
+
+<button class="btn" onclick="savePage()">Save Page</button>
+
+</div>
+
+<!-- PREVIEW -->
+<div class="preview">
+<img src="https://via.placeholder.com/90" class="profile" id="profileImage">
+<h3 id="previewTitle">Your Page Title</h3>
+
+<div class="links" id="linksContainer"></div>
+<div class="gallery" id="galleryContainer"></div>
+
+<div class="about-section">
+<h2>About Me</h2>
+<p id="aboutText">Write something about yourself here.</p>
+</div>
+</div>
+
+</div>
+
+<script>
+const imageUpload = document.getElementById("imageUpload")
+const profileImage = document.getElementById("profileImage")
+const titleInput = document.getElementById("titleInput")
+const previewTitle = document.getElementById("previewTitle")
+const linkInput = document.getElementById("linkInput")
+const linksContainer = document.getElementById("linksContainer")
+const galleryUpload = document.getElementById("galleryUpload")
+const galleryContainer = document.getElementById("galleryContainer")
+const aboutInput = document.getElementById("aboutInput")
+const aboutText = document.getElementById("aboutText")
+
+// Profile Image Upload
+imageUpload.addEventListener("change", function(){
+    const file = this.files[0]
+    if(!file) return
+    const reader = new FileReader()
+    reader.onload = function(e){ profileImage.src = e.target.result }
+    reader.readAsDataURL(file)
+})
+
+// Title Live Preview
+titleInput.addEventListener("input", function(){ previewTitle.textContent = this.value })
+
+// Add Links
+function addLink(){
+    const value = linkInput.value.trim()
+    if(!value) return
+    const a = document.createElement("a")
+    a.href = value
+    a.textContent = value
+    a.target="_blank"
+    linksContainer.appendChild(a)
+    linkInput.value=""
+}
+
+// Add Gallery Images
+galleryUpload.addEventListener("change", function(){
+    const files = this.files
+    for(let i=0;i<files.length;i++){
+        const file = files[i]
+        const reader = new FileReader()
+        reader.onload = function(e){
+            const img = document.createElement("img")
+            img.src = e.target.result
+            galleryContainer.appendChild(img)
+        }
+        reader.readAsDataURL(file)
+    }
+})
+
+// About Section Live Preview
+aboutInput.addEventListener("input", function(){ aboutText.textContent = this.value })
+
+// Save to localStorage (simple frontend demo)
+function savePage(){
+    const data = {
+        title: titleInput.value,
+        profile: profileImage.src,
+        links: [],
+        gallery: [],
+        about: aboutInput.value
+    }
+
+    document.querySelectorAll("#linksContainer a").forEach(a=>{
+        data.links.push(a.href)
+    })
+    document.querySelectorAll("#galleryContainer img").forEach(img=>{
+        data.gallery.push(img.src)
+    })
+
+    localStorage.setItem("bioPageData", JSON.stringify(data))
+    alert("Your bio page is saved! Open public page to view.")
+}
+
+</script>
+
+</body>
+</html>
