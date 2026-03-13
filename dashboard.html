@@ -3,166 +3,493 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard | Linkora</title>
+<title>Linkora Dashboard</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
-body{background:#f4f6fb;padding:20px;}
-.container{max-width:1200px;margin:auto;display:flex;gap:40px;flex-wrap:wrap;}
 
-/* EDITOR */
-.editor{flex:1;min-width:320px;background:white;padding:25px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.08);}
-.editor h2{margin-bottom:20px;}
-.input-group{margin-bottom:15px;}
-.input-group input, .input-group textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;}
-.input-group label{display:block;margin-bottom:5px;font-weight:bold;}
-textarea{resize:none;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+:root{
+--theme-color:#FFD400;
+}
+body{
+background:#f2f4f8;
+padding:40px;
+}
 
-/* BUTTON */
-.btn{background:#6C63FF;color:white;padding:10px 18px;border:none;border-radius:20px;cursor:pointer;margin-top:5px;transition:.3s;}
-.btn:hover{background:#4A47A3;}
+.container{
+max-width:1200px;
+margin:auto;
+display:flex;
+gap:40px;
+flex-wrap:wrap;
+}
 
-/* PREVIEW */
-.preview{flex:1;min-width:320px;background:white;padding:25px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.08);text-align:center;}
-.preview img.profile{width:90px;height:90px;border-radius:50%;object-fit:cover;margin-bottom:10px;}
-.preview h3{margin-bottom:20px;}
-.links a, .gallery img{display:block;margin:8px 0;padding:10px;background:#6C63FF;color:white;border-radius:10px;text-decoration:none;}
-.gallery{margin-top:20px;}
-.gallery img{width:80px;height:80px;border-radius:10px;margin:5px;object-fit:cover;display:inline-block;}
-.about-section{margin-top:40px;padding:30px;background:#6C63FF;color:white;border-radius:15px;text-align:center;}
-.about-section h2{font-size:24px;margin-bottom:10px;}
-.about-section p{font-size:15px;line-height:1.6;max-width:500px;margin:auto;}
+.editor{
+flex:1;
+min-width:320px;
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.input-group{
+margin-bottom:15px;
+}
+
+.input-group label{
+display:block;
+font-weight:bold;
+margin-bottom:6px;
+}
+
+.input-group input,
+.input-group textarea{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:1px solid #ddd;
+}
+
+button{
+background:#6C63FF;
+color:white;
+border:none;
+padding:10px 16px;
+border-radius:20px;
+cursor:pointer;
+margin-top:5px;
+}
+
+/* preview */
+
+.preview-wrapper{
+flex:1;
+display:flex;
+justify-content:center;
+}
+
+.bio-preview{
+
+width:320px;
+min-height:640px;
+
+background-size:cover;
+background-position:center;
+
+border-radius:40px;
+padding:30px 20px;
+text-align:center;
+position:relative;
+
+box-shadow:0 20px 40px rgba(0,0,0,0.15);
+overflow:hidden;
+
+}
+
+.bio-preview::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(255,255,255,0.75);
+border-radius:40px;
+}
+
+.bio-content{
+position:relative;
+z-index:2;
+}
+
+.profile-img{
+width:70px;
+height:70px;
+border-radius:50%;
+margin-bottom:10px;
+object-fit:cover;
+}
+
+.bio-links a{
+display:block;
+background:var(--theme-color);
+padding:14px;
+border-radius:30px;
+margin-bottom:12px;
+text-decoration:none;
+font-weight:bold;
+color:#fff;
+}
+
+.bio-social img{
+width:22px;
+margin:0 8px;
+}
+
+/* gallery */
+
+.gallery{
+margin-top:20px;
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+justify-content:center;
+}
+
+.gallery img{
+width:70px;
+height:70px;
+border-radius:10px;
+object-fit:cover;
+}
+.about{
+margin-top:25px;
+font-size:14px;
+line-height:1.5;
+color:#333;
+}
+.bio-links{
+    margin-top: 20px;
+}
+.editor h2{
+    margin-bottom: 20px;
+}
+.link-item{
+position:relative;
+margin-bottom:12px;
+}
+
+.link-item a{
+display:block;
+background:#FFD400;
+padding:14px;
+border-radius:30px;
+text-decoration:none;
+font-weight:bold;
+color:#d65c00;
+}
+
+.link-controls{
+position:absolute;
+right:10px;
+top:8px;
+display:flex;
+gap:6px;
+}
+
+.link-controls button{
+border:none;
+background:white;
+border-radius:6px;
+padding:3px 6px;
+cursor:pointer;
+font-size:12px;
+}
 </style>
 </head>
 <body>
 
 <div class="container">
 
-<!-- EDITOR -->
 <div class="editor">
-<h2>Edit Your Bio Page</h2>
+
+<h2>Edit Bio Page</h2>
 
 <div class="input-group">
-<label>Upload Profile Image</label>
-<input type="file" id="imageUpload" accept="image/*">
+<label>Profile Image</label>
+<input type="file" id="profileUpload">
 </div>
 
 <div class="input-group">
-<label>Page Title</label>
-<input type="text" id="titleInput" placeholder="Your Page Title">
+<label>Background Image</label>
+<input type="file" id="bgUpload">
 </div>
 
 <div class="input-group">
-<label>Add Link</label>
-<input type="text" id="linkInput" placeholder="https://">
-<button type="button" class="btn" onclick="addLink()">Add Link</button>
+<label>Title</label>
+<input type="text" id="titleInput">
 </div>
 
 <div class="input-group">
-<label>Upload Gallery Images</label>
-<input type="file" id="galleryUpload" multiple accept="image/*">
+<label>Subtitle</label>
+<input type="text" id="subtitleInput">
 </div>
 
 <div class="input-group">
+<label>Link Name</label>
+<input type="text" id="linkNameInput" placeholder="Our Drinks">
+</div>
+
+<div class="input-group">
+<label>Link URL</label>
+<input type="text" id="linkUrlInput" placeholder="https://example.com">
+</div>
+
+<button onclick="addLink()">Add Link</button>
+<div class="input-group" style="margin-top: 20px;">
 <label>About Section</label>
-<textarea id="aboutInput" rows="4" placeholder="Write something about yourself..."></textarea>
+<textarea id="aboutInput" rows="4" placeholder="Write something about you or your brand"></textarea>
+</div>
+<hr style="margin:20px 0">
+
+<h3>Gallery</h3>
+
+<div class="input-group " >
+<label>Upload Gallery Images</label>
+<input type="file" id="galleryUpload" multiple>
 </div>
 
-<button class="btn" onclick="savePage()">Save Page</button>
+<hr style="margin:20px 0">
 
+<h3>Social Links</h3>
+
+<div class="input-group">
+<label>Instagram</label>
+<input type="text" id="instagramInput">
+</div>
+<div class="input-group">
+<label>TikTok</label>
+<input type="text" id="tiktokInput">
 </div>
 
-<!-- PREVIEW -->
-<div class="preview">
-<img src="https://via.placeholder.com/90" class="profile" id="profileImage">
-<h3 id="previewTitle">Your Page Title</h3>
+<div class="input-group">
+<label>YouTube</label>
+<input type="text" id="youtubeInput">
+</div>
 
-<div class="links" id="linksContainer"></div>
+<div class="input-group">
+<label>X</label>
+<input type="text" id="twitterInput">
+</div>
+
+<button onclick="updateSocial()">Update Social</button>
+<div style="margin-top: 20px;">
+    <div class="input-group">
+<label>Your Bio Page Link</label>
+<input type="text" id="bioLink" placeholder="https://linkora.com/nvard">
+</div>
+
+<button onclick="generateQR()">Generate QR Code</button>
+
+<div id="qrCode" style="margin-top:15px"></div>
+</div>
+</div>
+
+
+<div class="preview-wrapper">
+
+<div class="bio-preview" id="bioPreview"
+style="background-image:url('https://images.unsplash.com/photo-1604908176997-4317c04c9c75')">
+
+<div class="bio-content">
+
+<img class="profile-img" id="profileImage"
+src="https://via.placeholder.com/80">
+
+<h2 id="previewTitle">Hydra Juice</h2>
+<p id="previewSubtitle">Your daily dose of vitamin C</p>
+
+<div class="bio-links" id="linksContainer"></div>
+
 <div class="gallery" id="galleryContainer"></div>
-
-<div class="about-section">
-<h2>About Me</h2>
-<p id="aboutText">Write something about yourself here.</p>
+<div class="about" id="aboutPreview">
+Tell your visitors about yourself or your business.
 </div>
-</div>
+<div class="bio-social" id="socialContainer"></div>
 
 </div>
 
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-const imageUpload = document.getElementById("imageUpload")
-const profileImage = document.getElementById("profileImage")
-const titleInput = document.getElementById("titleInput")
-const previewTitle = document.getElementById("previewTitle")
-const linkInput = document.getElementById("linkInput")
-const linksContainer = document.getElementById("linksContainer")
-const galleryUpload = document.getElementById("galleryUpload")
-const galleryContainer = document.getElementById("galleryContainer")
-const aboutInput = document.getElementById("aboutInput")
-const aboutText = document.getElementById("aboutText")
 
-// Profile Image Upload
-imageUpload.addEventListener("change", function(){
-    const file = this.files[0]
-    if(!file) return
-    const reader = new FileReader()
-    reader.onload = function(e){ profileImage.src = e.target.result }
-    reader.readAsDataURL(file)
-})
+        /* profile */
 
-// Title Live Preview
-titleInput.addEventListener("input", function(){ previewTitle.textContent = this.value })
+        profileUpload.onchange=function(){
 
-// Add Links
-function addLink(){
-    const value = linkInput.value.trim()
-    if(!value) return
-    const a = document.createElement("a")
-    a.href = value
-    a.textContent = value
-    a.target="_blank"
-    linksContainer.appendChild(a)
-    linkInput.value=""
-}
+        const reader=new FileReader()
 
-// Add Gallery Images
-galleryUpload.addEventListener("change", function(){
-    const files = this.files
-    for(let i=0;i<files.length;i++){
-        const file = files[i]
-        const reader = new FileReader()
-        reader.onload = function(e){
-            const img = document.createElement("img")
-            img.src = e.target.result
-            galleryContainer.appendChild(img)
+        reader.onload=e=>{
+        profileImage.src=e.target.result
         }
+
+        reader.readAsDataURL(this.files[0])
+
+        }
+
+        /* background */
+
+        bgUpload.onchange=function(){
+
+        const reader=new FileReader()
+
+        reader.onload=e=>{
+        bioPreview.style.backgroundImage=`url(${e.target.result})`
+        }
+
+        reader.readAsDataURL(this.files[0])
+
+        }
+
+        /* title */
+
+        titleInput.oninput=function(){
+        previewTitle.textContent=this.value
+        }
+
+        /* subtitle */
+
+        subtitleInput.oninput=function(){
+        previewSubtitle.textContent=this.value
+        }
+
+        /* links */
+
+        function addLink(){
+
+        const name=document.getElementById("linkNameInput").value.trim()
+        const url=document.getElementById("linkUrlInput").value.trim()
+
+        if(!name || !url) return
+
+        const wrapper=document.createElement("div")
+        wrapper.className="link-item"
+        wrapper.draggable=true
+
+        wrapper.innerHTML=`
+        <a href="${url}" target="_blank">${name}</a>
+
+        <div class="link-controls">
+        <button onclick="editLink(this)">✏️</button>
+        <button onclick="deleteLink(this)">❌</button>
+        </div>
+        `
+
+        document.getElementById("linksContainer").appendChild(wrapper)
+
+        document.getElementById("linkNameInput").value=""
+        document.getElementById("linkUrlInput").value=""
+
+        addDragEvents(wrapper)
+
+        }
+        function deleteLink(btn){
+
+        btn.closest(".link-item").remove()
+
+        }
+        function editLink(btn){
+
+        const item=btn.closest(".link-item")
+        const link=item.querySelector("a")
+
+        const newName=prompt("Edit link name",link.textContent)
+        const newUrl=prompt("Edit link URL",link.href)
+
+        if(newName) link.textContent=newName
+        if(newUrl) link.href=newUrl
+
+        }
+        let dragged
+
+        function addDragEvents(el){
+
+        el.addEventListener("dragstart",function(){
+        dragged=this
+        })
+
+        el.addEventListener("dragover",function(e){
+        e.preventDefault()
+        })
+
+        el.addEventListener("drop",function(){
+
+        if(dragged!==this){
+
+        let container=document.getElementById("linksContainer")
+
+        container.insertBefore(dragged,this)
+
+        }
+
+        })
+
+        }
+        /* gallery */
+
+        galleryUpload.onchange=function(){
+
+        for(let file of this.files){
+
+        const reader=new FileReader()
+
+        reader.onload=e=>{
+
+        const img=document.createElement("img")
+
+        img.src=e.target.result
+
+        galleryContainer.appendChild(img)
+
+        }
+
         reader.readAsDataURL(file)
-    }
+
+        }
+
+        }
+
+        /* social */
+
+        function updateSocial(){
+
+        socialContainer.innerHTML=""
+
+        const socials=[
+        {url:instagramInput.value,icon:"https://cdn-icons-png.flaticon.com/512/2111/2111463.png"},
+        {url:tiktokInput.value,icon:"https://cdn-icons-png.flaticon.com/512/3046/3046126.png"},
+        {url:youtubeInput.value,icon:"https://cdn-icons-png.flaticon.com/512/1384/1384060.png"},
+        {url:twitterInput.value,icon:"https://cdn-icons-png.flaticon.com/512/733/733579.png"}
+        ]
+
+        socials.forEach(s=>{
+        if(s.url){
+        socialContainer.innerHTML+=`<a href="${s.url}" target="_blank">
+        <img src="${s.icon}">
+        </a>`
+        }
+        })
+
+        }
+        document.getElementById("aboutInput").addEventListener("input",function(){
+
+        document.getElementById("aboutPreview").textContent=this.value
+
+        })
+  
+function generateQR(){
+
+const link=document.getElementById("bioLink").value
+
+if(!link) return
+
+document.getElementById("qrCode").innerHTML=""
+
+new QRCode(document.getElementById("qrCode"),{
+
+text:link,
+width:150,
+height:150
+
 })
 
-// About Section Live Preview
-aboutInput.addEventListener("input", function(){ aboutText.textContent = this.value })
-
-// Save to localStorage (simple frontend demo)
-function savePage(){
-    const data = {
-        title: titleInput.value,
-        profile: profileImage.src,
-        links: [],
-        gallery: [],
-        about: aboutInput.value
-    }
-
-    document.querySelectorAll("#linksContainer a").forEach(a=>{
-        data.links.push(a.href)
-    })
-    document.querySelectorAll("#galleryContainer img").forEach(img=>{
-        data.gallery.push(img.src)
-    })
-
-    localStorage.setItem("bioPageData", JSON.stringify(data))
-    alert("Your bio page is saved! Open public page to view.")
 }
-
 </script>
 
 </body>
